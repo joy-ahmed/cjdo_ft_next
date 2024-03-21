@@ -12,6 +12,36 @@ import {
 import { Button, Checkbox, Input } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
+import { z } from "zod";
+
+const FormSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, { message: "first name must be at least 2 characters" })
+    .max(20, { message: "first name must be less than 20 characters" })
+    .regex(new RegExp("[a-zA-Z]"), "first name must be only letters"),
+  lastName: z
+    .string()
+    .min(2, { message: "last name must be at least 2 characters" })
+    .max(20, { message: "last name must be less than 20 characters" })
+    .regex(new RegExp("[a-zA-Z]"), "last name must be only letters"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().regex(new RegExp("[0-9]"), "phone must be only numbers"),
+  password: z
+    .string()
+    .min(6, { message: "password must be at least 6 characters" })
+    .max(20, { message: "password must be less than 20 characters" }),
+  confirmPassword: z
+    .string()
+    .min(6, { message: "password must be at least 6 characters" })
+    .max(20, { message: "password must be less than 20 characters" }),
+  acceptTerms: z.literal(true, {
+    errorMap: () => ({ message: "You must accept the terms and conditions" }),
+  }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+})
 
 const SignupForm = () => {
   const [isvissiblePassword, setIsVisiblePassword] = React.useState(false);
@@ -64,7 +94,10 @@ const SignupForm = () => {
         startContent={<KeyIcon className="w-4" />}
       />
       <Checkbox className="col-span-2" isRequired>
-        I accept the <Link className="underline" href="#">terms and conditions</Link>
+        I accept the{" "}
+        <Link className="underline" href="#">
+          terms and conditions
+        </Link>
       </Checkbox>
       <div className="col-span-2 flex justify-self-end">
         <Button color="primary" className="w-48">
