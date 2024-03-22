@@ -18,6 +18,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import PasswordStrength from "./PasswordStrength";
 import { registerUser } from "@/lib/actions/authActions";
+import { toast } from "react-toastify";
 
 const FormSchema = z
   .object({
@@ -53,7 +54,14 @@ const FormSchema = z
 type InputType = z.infer<typeof FormSchema>;
 
 const SignupForm = () => {
-  const { register, handleSubmit, reset, control, watch, formState: { errors } } = useForm<InputType>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
   });
   const [passStrength, setPassStrength] = React.useState(0);
@@ -61,10 +69,11 @@ const SignupForm = () => {
 
   const saveUser: SubmitHandler<InputType> = async (data) => {
     const { acceptTerms, confirmPassword, ...user } = data;
-    try{
-      const result = await registerUser(user)
-    }
-    catch(err){
+    try {
+      const result = await registerUser(user);
+      toast.success("User registered successfully");
+    } catch (err) {
+      toast.error("Error registering user");
       console.log(err);
     }
     reset();
@@ -73,9 +82,8 @@ const SignupForm = () => {
   const togglePassword = () => setIsVisiblePassword(!isvissiblePassword);
 
   useEffect(() => {
-    setPassStrength(
-      passwordStrength(watch().password).id);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setPassStrength(passwordStrength(watch().password).id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch().password]);
 
   return (
