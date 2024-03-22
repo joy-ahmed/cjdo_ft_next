@@ -17,6 +17,7 @@ import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import PasswordStrength from "./PasswordStrength";
+import { registerUser } from "@/lib/actions/authActions";
 
 const FormSchema = z
   .object({
@@ -59,7 +60,13 @@ const SignupForm = () => {
   const [isvissiblePassword, setIsVisiblePassword] = React.useState(false);
 
   const saveUser: SubmitHandler<InputType> = async (data) => {
-    console.log(data);
+    const { acceptTerms, confirmPassword, ...user } = data;
+    try{
+      const result = await registerUser(user)
+    }
+    catch(err){
+      console.log(err);
+    }
     reset();
   };
 
