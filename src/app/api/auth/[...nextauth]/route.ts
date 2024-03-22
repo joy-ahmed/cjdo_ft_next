@@ -3,6 +3,7 @@ import { AuthOptions } from "next-auth";
 import  CredentialsProvider  from "next-auth/providers/credentials";
 import * as bcrypt from "bcrypt";
 import NextAuth from "next-auth/next";
+import { User } from "@prisma/client";
 
 
 export const authOptions: AuthOptions = {
@@ -29,7 +30,17 @@ export const authOptions: AuthOptions = {
                 return rest;
             }
         })
-    ]
+    ],
+    callbacks: {
+        async session({ session, token }) {
+            session.user = token.user;
+            return session;
+        },
+        async jwt({ token, user }) {
+            user && (token.user = user as User);
+            return token;
+        }
+    }
 }
 
 const handler = NextAuth(authOptions);
