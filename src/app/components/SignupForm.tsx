@@ -60,7 +60,7 @@ const SignupForm = () => {
     reset,
     control,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
   });
@@ -175,7 +175,7 @@ const SignupForm = () => {
         <p className="col-span-2 text-red-500">{errors.acceptTerms.message}</p>
       )}
       <div className="col-span-2 flex justify-self-end">
-        <Button type="submit" color="primary" className="w-48">
+        <Button isLoading={isSubmitting} type="submit" color="primary" className="w-48">
           Sign Up
           <PaperAirplaneIcon className="w-4" />
         </Button>

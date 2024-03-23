@@ -4,7 +4,7 @@ import {
   ArrowRightEndOnRectangleIcon,
 } from "@heroicons/react/20/solid";
 import { Button } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
@@ -29,10 +29,9 @@ const SigninButton = () => {
         <div className="flex gap-2">
           <Button
             startContent={<ArrowRightEndOnRectangleIcon className="w-4" />}
-            as={Link}
             color="default"
             variant="flat"
-            href="/api/auth/signin"
+            onClick={() => signIn()}
           >
             Sign in
           </Button>
