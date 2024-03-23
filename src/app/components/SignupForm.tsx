@@ -19,6 +19,7 @@ import { z } from "zod";
 import PasswordStrength from "./PasswordStrength";
 import { registerUser } from "@/lib/actions/authActions";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z
   .object({
@@ -54,6 +55,7 @@ const FormSchema = z
 type InputType = z.infer<typeof FormSchema>;
 
 const SignupForm = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -76,6 +78,7 @@ const SignupForm = () => {
       toast.error("Error registering user");
       console.log(err);
     }
+    router.push("/auth/signin");
     reset();
   };
 
